@@ -6,4 +6,16 @@
  */
 export const pick = (obj, ...fields) => {
 
+    let copy_fields = [...fields]; 
+    let res_obj = {};
+
+     for (let i=0; i<copy_fields.length; i++){
+        for (let key of Object.keys(obj)){
+            if (copy_fields[i] == key){
+                res_obj[key] = obj[key];
+            }
+        }
+    } 
+
+    return res_obj;
 };
