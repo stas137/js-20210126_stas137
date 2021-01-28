@@ -5,7 +5,7 @@
  */
 export function createGetter(path) {
 
-    const [...arr] = path.split('.');
+    const arr = path.split('.');
 
     return (product) => {
         let temp = Object.assign({}, product);
