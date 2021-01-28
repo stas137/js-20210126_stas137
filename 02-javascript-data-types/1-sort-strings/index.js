@@ -5,19 +5,20 @@
  * @returns {string[]}
  */
 export function sortStrings(arr, param = 'asc') {
-    let new_arr = arr.map(item => item);
-    //let new_arr = arr.slice(0, arr.length);
+    const new_arr = arr.map(item => item);
+    //const new_arr = arr.slice(0, arr.length);
 
-    new_arr.sort(function (str, str2){
-        let collator = new Intl.Collator(['ru-RU', 'en-EN'], { caseFirst: 'upper' });
-        return collator.compare(str, str2);
-    });
     if (param == 'asc'){
-        return new_arr;
+        return new_arr.sort((str, str2) => {
+            let collator = new Intl.Collator(['ru-RU', 'en-EN'], { caseFirst: 'upper' });
+            return collator.compare(str, str2);
+        });
     }
     else {
-        new_arr.reverse();
-        return new_arr;
+        return new_arr.sort((str2, str) => {
+            let collator = new Intl.Collator(['ru-RU', 'en-EN'], { caseFirst: 'upper' });
+            return collator.compare(str, str2);
+        });
     }
 }
 
