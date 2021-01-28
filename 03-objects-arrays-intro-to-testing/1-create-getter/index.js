@@ -5,4 +5,26 @@
  */
 export function createGetter(path) {
 
+    const [...arr] = path.split('.');
+
+    return (temp = product) => {
+        for (let item of arr){
+            if (item in temp) {
+                temp = temp[item];
+            } else {
+                return undefined;
+            }
+        }
+        return temp;
+    }; 
 }
+
+const product = {
+    category: {
+      title: 'Goods'
+    }
+  }
+  
+const getter = createGetter('category.bar');
+  
+console.log(getter(product));
