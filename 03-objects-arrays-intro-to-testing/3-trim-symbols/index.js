@@ -6,7 +6,7 @@
  */
 export function trimSymbols(string, size) {
 
-    let copy_arr = [...string];
+    const copy_arr = [...string];
     let res_arr = [];
     let res_str = '';
     let index = 0;
