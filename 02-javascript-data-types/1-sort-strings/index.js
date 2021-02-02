@@ -8,18 +8,16 @@ export function sortStrings(arr, param = 'asc') {
     const new_arr = arr.map(item => item);
     //const new_arr = arr.slice(0, arr.length);
 
-    const collator = new Intl.Collator(['ru-RU', 'en-EN'], { caseFirst: 'upper' });
-
     if (param == 'asc'){
-        return new_arr.sort((str, str2) => {
-            return collator.compare(str, str2);
-        });
+        return new_arr.sort((str, str2) => mySortStr(str, str2));
     }
     else {
-        return new_arr.sort((str2, str) => {
-            return collator.compare(str, str2);
-        });
+        return new_arr.sort((str, str2) => mySortStr(str2, str));
     }
 }
 
+function mySortStr(str, str2){
+    const collator = new Intl.Collator(['ru-RU', 'en-EN'], { caseFirst: 'upper' });
+    return collator.compare(str, str2);
+}
 
