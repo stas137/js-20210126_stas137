@@ -5,15 +5,23 @@
  * @returns {string[]}
  */
 export function sortStrings(arr, param = 'asc') {
-    const new_arr = arr.map(item => item);
-    //const new_arr = arr.slice(0, arr.length);
 
-    if (param == 'asc'){
-        return new_arr.sort((str, str2) => mySortStr(str, str2));
+    const arrCopy = [...arr];
+    let direction = 1;
+
+    switch (param){
+        case 'asc':
+            direction = 1;
+            break;
+        case 'desc':
+            direction *= -1;
+            break;
+        default:
+            return arrCopy;
     }
-    else {
-        return new_arr.sort((str, str2) => mySortStr(str2, str));
-    }
+
+    return arrCopy.sort((str, str2) => direction*mySortStr(str, str2));
+
 }
 
 function mySortStr(str, str2){
