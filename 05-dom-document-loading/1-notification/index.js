@@ -1,6 +1,6 @@
 export default class NotificationMessage {
 
-    static countElements = 0;
+    static countMessages = 0;
 
     constructor (...props){
 
@@ -10,45 +10,58 @@ export default class NotificationMessage {
             this.duration = this.obj.duration;
             this.type = this.obj.type;
 
-            this.element = this.createHTMLElement(this.message, this.type);
+            this.element = this.createHTMLElement(this.message, this.type, this.duration);
         } else {
             this.element = null;
         }
     }
 
 
-    createHTMLElement(message, type){
+    createHTMLElement(message, type, duration){
 
         let node = document.createElement('div');
         node.classList.add('notification');
         node.classList.add(type);
+        node.style = `--value:${duration/1000}s`;
         node.setAttribute('id', 'elem');
 
-        node.innerHTML = `${message}`;  
+        let timerChild = document.createElement('div');
+        timerChild.classList.add('timer');
+        node.append(timerChild);
+
+        let innerWrapperChild = document.createElement('div');
+        innerWrapperChild.classList.add('inner-wrapper');
+        node.append(innerWrapperChild);
+
+        let notificationHeaderChild = document.createElement('div');
+        notificationHeaderChild.classList.add('notification-header');
+        notificationHeaderChild.innerHTML = `${type}`;
+        innerWrapperChild.append(notificationHeaderChild);
+
+        let notificationBodyChild = document.createElement('div');
+        notificationBodyChild.classList.add('notification-body');
+        notificationBodyChild.innerHTML = `${message}`;
+        innerWrapperChild.append(notificationBodyChild);
+        
         return node;
     }
 
     installTime(duration){
 
         setTimeout(()=>{
-            
             this.remove();
-            NotificationMessage.countElements--;
-
+            NotificationMessage.countMessages--;
         }, duration);
     }
 
     show(parentNode){
         
-        NotificationMessage.countElements++;
+        NotificationMessage.countMessages++;
 
-        if (NotificationMessage.countElements > 1){
-            //console.log('waiting');
+        if (NotificationMessage.countMessages > 1){
             const node = document.getElementById('elem');
             node.remove();
         }
-
-        //console.log(this.element, NotificationMessage.count);
 
         if (parentNode){
             parentNode.append(this.element);
@@ -60,12 +73,10 @@ export default class NotificationMessage {
 
     remove(){
         this.element.remove();
-        return this.element;
     }
 
     destroy(){
-        this.element = null;
-        return this.element;
+        this.remove();
     }
 
     get element(){
@@ -73,10 +84,6 @@ export default class NotificationMessage {
     }
 
     set element(val){
-        if (val){
-            this._element = val;
-        } else {
-            this._element = null;
-        }
+            this._element = val || null;
     }
 }
