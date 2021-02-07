@@ -5,17 +5,12 @@
  */
 export function uniq(arr) {
 
-    let res_arr = [];
-    let index = 0;
+    let resArr = [];
+    let set = new Set(undefined);
 
-    if (arr){
-        for (let item of arr){
-            if (!res_arr.includes(item)) {
-                res_arr[index] = item;
-                index++;
-            }
-        }
+    for (let item of set.values()){
+        resArr.push(item);
     }
 
-    return(res_arr);
+    return(resArr);
 }
