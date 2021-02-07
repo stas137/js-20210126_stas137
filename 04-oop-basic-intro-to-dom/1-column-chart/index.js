@@ -1,7 +1,5 @@
 export default class ColumnChart {
 
-    static countColumnChart = 0;
-
     constructor(props){
 
         this.chartHeight = 50;
@@ -57,8 +55,6 @@ export default class ColumnChart {
     }
 
     createElementColumnChart(data, label, value, link){
-
-        ColumnChart.countColumnChart++;
 
         let node = document.createElement('div');
         node.classList.add("column-chart");
