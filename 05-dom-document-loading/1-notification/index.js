@@ -1,68 +1,56 @@
 export default class NotificationMessage {
 
-    static countMessages = 0;
+    static prevMessage = null;
 
-    constructor (...props){
+    constructor (message='', obj={}){
 
-        if (props){
-            [this.message='', this.obj={}] = [...props]; 
+            this.message = message;
+            this.duration = obj.duration || 2000;
+            this.type = obj.type || 'success';
 
-            this.duration = this.obj.duration;
-            this.type = this.obj.type;
-
-            this.element = this.createHTMLElement(this.message, this.type, this.duration);
-        } else {
-            this.element = null;
-        }
+            this.render();
     }
 
+    render(){
+
+        this.element = this.createHTMLElement(this.message, this.type, this.duration);
+
+        if (NotificationMessage.prevMessage == null) {
+            NotificationMessage.prevMessage = this.element;
+        }  else {
+            NotificationMessage.prevMessage.remove();
+            NotificationMessage.prevMessage = this.element;
+        } 
+
+    }
 
     createHTMLElement(message, type, duration){
 
-        let node = document.createElement('div');
-        node.classList.add('notification');
-        node.classList.add(type);
-        node.style = `--value:${duration/1000}s`;
-        node.setAttribute('id', 'elem');
+        const node = document.createElement('div');
+        node.innerHTML = `
+        <div class="notification ${type}" style="--value:${duration/1000}s" id="elem">
+            <div class="timer">
+            </div>
+            <div class="inner-wrapper">
+                <div class="notification-header">${type}</div>
+                <div class="notification-body">${message}</div>
+            </div>
+        </div>
+        `; 
 
-        let timerChild = document.createElement('div');
-        timerChild.classList.add('timer');
-        node.append(timerChild);
-
-        let innerWrapperChild = document.createElement('div');
-        innerWrapperChild.classList.add('inner-wrapper');
-        node.append(innerWrapperChild);
-
-        let notificationHeaderChild = document.createElement('div');
-        notificationHeaderChild.classList.add('notification-header');
-        notificationHeaderChild.innerHTML = `${type}`;
-        innerWrapperChild.append(notificationHeaderChild);
-
-        let notificationBodyChild = document.createElement('div');
-        notificationBodyChild.classList.add('notification-body');
-        notificationBodyChild.innerHTML = `${message}`;
-        innerWrapperChild.append(notificationBodyChild);
-        
-        return node;
+        return node.firstElementChild;
     }
 
     installTime(duration){
 
         setTimeout(()=>{
             this.remove();
-            NotificationMessage.countMessages--;
+            NotificationMessage.prevMessage = null;
         }, duration);
     }
 
     show(parentNode){
         
-        NotificationMessage.countMessages++;
-
-        if (NotificationMessage.countMessages > 1){
-            const node = document.getElementById('elem');
-            node.remove();
-        }
-
         if (parentNode){
             parentNode.append(this.element);
         } else {
@@ -84,6 +72,6 @@ export default class NotificationMessage {
     }
 
     set element(val){
-            this._element = val || null;
+        this._element = val || null;
     }
 }
