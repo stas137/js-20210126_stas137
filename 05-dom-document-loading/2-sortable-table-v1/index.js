@@ -55,7 +55,6 @@ export default class SortableTable {
             default:
                 break;
         }
-
         
         this.removeBody();
         this.bodyElement = this.createBodyElement(this.data);
