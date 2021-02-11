@@ -105,7 +105,7 @@ export default class SortableTable {
             }
 
             if (item.price){
-                quantity = `<div class="sortable-table__cell">${item.price}</div>`;
+                price = `<div class="sortable-table__cell">${item.price}</div>`;
             }
 
             if (item.sales){
