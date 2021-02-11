@@ -6,4 +6,14 @@
  */
 export const pick = (obj, ...fields) => {
 
+    const copy_fields = [...fields]; 
+    let res_obj = {};
+
+        for (let [key, value] of Object.entries(obj)){
+            if (copy_fields.includes(key)){
+                res_obj[key] = value;
+            }
+        }
+
+    return res_obj;
 };
