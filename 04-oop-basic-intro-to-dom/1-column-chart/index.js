@@ -1,25 +1,22 @@
 export default class ColumnChart {
 
-    constructor(props){
+    constructor({ data=[], label='', value='', link=''} = {}){
 
         this.chartHeight = 50;
+
+        this.data = data;
+        this.label = label;
+        this.value = value;
+        this.link = link;
+
+        this.render();
+    }
     
-        if (props){
-
-            this.data = props.data;
-            this.label = props.label;
-            this.value = props.value;
-            this.link = props.link;
-
-            this.element = this.createElementColumnChart(this.data, this.label, this.value, this.link);
-        }
-        else {
-            this.element = this.createEmptyElementColumnChart();
-        }
+    render(){
+        this.element = this.createElementColumnChart(this.data, this.label, this.value, this.link);
     }
 
-
-    update({data, label, value, link}) {
+    update({ data=[], label='', value='', link=''}) {
         return this.element = this.createElementColumnChart(data, label, value, link);
     }
 
@@ -31,65 +28,45 @@ export default class ColumnChart {
         this.element.remove();
     }
 
-    createEmptyElementColumnChart(){
-
-        let node = document.createElement('div');
-        node.classList.add("column-chart_loading");
-            
-        node.innerHTML = `
-        <div class="column-chart__title">
-            Total label
-            <a href="#link" class="column-chart__link">View all</a>
-        </div>
-        <div class="column-chart__container">
-            <div data-element="header" class="column-chart__header">
-                value
-            </div>
-            <div data-element="body" class="column-chart__chart"> 
-                data                  
-            </div>
-        </div>
-        `;
-
-        return node;
-    }
-
     createElementColumnChart(data, label, value, link){
 
-        let node = document.createElement('div');
-        node.classList.add("column-chart");
-        node.style = `--chart-height: ${this.chartHeight}`;
-        
-        let childTitle = document.createElement('div');
-        childTitle.classList.add('column-chart__title');
-        childTitle.innerHTML = `Total ${label}`;
+        let classMain = '';
+        let linkMain = '';
 
-        if (link){
-            childTitle.innerHTML += `<a href="${link}" class="column-chart__link">View all</a>`;
+        if (data[0]){
+            classMain = 'column-chart';
+        }
+        else {
+            classMain = 'column-chart column-chart_loading';
         }
 
-        node.append(childTitle);
+        if (link){
+            linkMain = `<a href="${link}" class="column-chart__link">View all</a>`;
+        }
 
-        let childContainer = document.createElement('div');
-        childContainer.classList.add('column-chart__container');
+        const node = document.createElement('div');
 
-        childContainer.innerHTML = `
-            <div data-element="header" class="column-chart__header">
-                ${value}
+        node.innerHTML = `
+            <div class="${classMain}" style="--chart-height: ${this.chartHeight}">
+                <div class="column-chart__title">
+                    Total ${label}
+                    ${linkMain}
+                </div>
+                <div class="column-chart__container">
+                    <div data-element="header" class="column-chart__header">${value}</div>
+                    <div data-element="body" class="column-chart__chart"> 
+                        ${this.getChartValue(data)}                   
+                    </div>
+                </div>
             </div>
-            <div data-element="body" class="column-chart__chart"> 
-                ${this.getChartValue(data)}                    
-            </div>
-        `; 
+        `;
 
-        node.append(childContainer);
-
-        return node;
+        return node.firstElementChild;
     }
 
-    getColumnHeight(data){
+    getColumnHeight(data, chartHeight){
         const maxValue = Math.max(...data);
-        const scale = 50 / maxValue;
+        const scale = chartHeight / maxValue;
 
         return data.map(elem => {
             return {
@@ -100,14 +77,9 @@ export default class ColumnChart {
     }
 
     getChartValue(data) {
-        let str = '';
-        if (data){
-            const newData = this.getColumnHeight(data);
-            for(let item of newData){
-                str += `<div style="--value: ${item.value}" data-tooltip="${item.percent}"></div>`
-            }
-        }
-        return str;
+        return this.getColumnHeight(data, this.chartHeight).map(item => {
+            return `<div style="--value: ${item.value}" data-tooltip="${item.percent}"></div>`;
+        }).join('');
     }
 
     get element() {
@@ -115,12 +87,7 @@ export default class ColumnChart {
     } 
 
     set element(val) {
-        if (val){
-            this._element = val;
-        }
-        else {
-            this._element = this.createEmptyElementColumnChart();
-        }
+            this._element = val || '';
     }
     
     get data() {
