@@ -65,6 +65,7 @@ export default class NotificationMessage {
 
     destroy(){
         this.remove();
+        NotificationMessage.prevMessage = null;
     }
 
     get element(){
