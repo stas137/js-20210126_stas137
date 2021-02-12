@@ -9,8 +9,9 @@ export default class SortableTable {
     }
 
     render(){
+
         this.headerElement = this.createHeaderElement(this.header);
-        this.bodyElement = this.createBodyElement(this.data);
+        this.bodyElement = this.createBodyElement(this.data, this.header);
 
         this.element = this.createElement(this.headerElement, this.bodyElement);
     }
@@ -56,8 +57,11 @@ export default class SortableTable {
                 break;
         }
         
+        this.removeHeader();
         this.removeBody();
-        this.bodyElement = this.createBodyElement(this.data);
+        this.headerElement = this.createHeaderElement(this.header, fieldValue, orderValue);
+        this.bodyElement = this.createBodyElement(this.data, this.header);
+        this.element.append(this.headerElement);
         this.element.append(this.bodyElement);
     }
 
@@ -69,19 +73,46 @@ export default class SortableTable {
         this.bodyElement.remove();
     }
 
-    getHeaderItems(header){
+    removeHeader(){
+        this.headerElement.remove();
+    }
+
+    getHeaderItems(header, fieldValue = 'title', order){
         return [...header].map(item => {
 
-            const headerItem = `<div data-name="${item.id}" class="sortable-table__cell">
-                                    <span>${item.title}</span>
-                                </div>`;
+            let headerItem = '';
+            let orderItem = '';
+
+            if (order) {
+                orderItem = `data-order="${order}"`;
+            }
+
+            if ((item.id == fieldValue) && (item.id!='images')){
+                headerItem = `
+                <div data-id="${item.id}" class="sortable-table__cell" data-sortable="${item.sortable}" ${orderItem}>
+                    <span>${item.title}</span>
+                    <span data-element="arrow" class="sortable-table__sort-arrow">
+                        <span class="sort-arrow"></span>
+                    </span>
+                </div>`;
+            } else if ((item.id == 'images')){
+                headerItem = `
+                <div data-id="${item.id}" class="sortable-table__cell" data-sortable="${item.sortable}" ${orderItem}>
+                    <span>${item.title}</span>
+                </div>`;
+            } else {
+                headerItem = `
+                <div data-id="${item.id}" class="sortable-table__cell" data-sortable="${item.sortable}" ${orderItem}>
+                    <span>${item.title}</span>
+                </div>`;
+            }
 
             return headerItem;
 
         }).join('');
     }
 
-    getBodyItems(data){
+    getBodyItems(data, header){
 
         return [...data].map(item => {
 
@@ -92,7 +123,7 @@ export default class SortableTable {
             let sales = '';
             
             if (item.images){
-                img = `<div class="sortable-table__cell"><img class="sortable-table-image" alt="Image" src=${item.images[0].url}></div>`;
+                img = header[0].template(item.images);
             } 
 
             if (item.title){
@@ -124,23 +155,19 @@ export default class SortableTable {
     }
 
 
-    createHeaderElement(header){
+    createHeaderElement(header=[], fieldValue, orderValue){
 
-        if (header){
-            
             const headerElement = document.createElement('div');
 
             headerElement.innerHTML = `
             <div data-elem="header" class="sortable-table__header sortable-table__row">
-                ${this.getHeaderItems(header)}
+                ${this.getHeaderItems(header, fieldValue, orderValue)}
             </div>`;
 
             return headerElement.firstElementChild;
-        }
-        return null;
     }
 
-    createBodyElement(data){
+    createBodyElement(data, header){
 
         if (data){
 
@@ -148,7 +175,7 @@ export default class SortableTable {
 
             bodyElement.innerHTML = `
                 <div data-elem="body" sortable-table__body>
-                    ${this.getBodyItems(data)}
+                    ${this.getBodyItems(data, header)}
                 </div>
             `;         
             
@@ -195,6 +222,4 @@ export default class SortableTable {
     set dataElement(val){
         this._dataElement = val || null;
     }
-
 }
-
