@@ -15,10 +15,10 @@ export default class NotificationMessage {
 
         this.element = this.createHTMLElement(this.message, this.type, this.duration);
 
-        if (NotificationMessage.prevMessage == null) {
+        if (NotificationMessage.prevMessage) {
+            NotificationMessage.prevMessage.remove();
             NotificationMessage.prevMessage = this.element;
         }  else {
-            NotificationMessage.prevMessage.remove();
             NotificationMessage.prevMessage = this.element;
         } 
 
