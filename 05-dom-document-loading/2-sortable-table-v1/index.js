@@ -95,11 +95,6 @@ export default class SortableTable {
                         <span class="sort-arrow"></span>
                     </span>
                 </div>`;
-            } else if ((item.id == 'images')){
-                headerItem = `
-                <div data-id="${item.id}" class="sortable-table__cell" data-sortable="${item.sortable}" ${orderItem}>
-                    <span>${item.title}</span>
-                </div>`;
             } else {
                 headerItem = `
                 <div data-id="${item.id}" class="sortable-table__cell" data-sortable="${item.sortable}" ${orderItem}>
