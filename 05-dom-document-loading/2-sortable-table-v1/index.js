@@ -1,9 +1,9 @@
 export default class SortableTable {
 
-    constructor(header = [], obj = {}){
+    constructor(header = [], { data = [] } = {}){
 
         this.header = header;
-        this.data = obj.data || [];
+        this.data = data;
 
         this.render();
     }
@@ -150,7 +150,7 @@ export default class SortableTable {
     }
 
 
-    createHeaderElement(header=[], fieldValue, orderValue){
+    createHeaderElement(header = [], fieldValue, orderValue){
 
             const headerElement = document.createElement('div');
 
@@ -162,9 +162,7 @@ export default class SortableTable {
             return headerElement.firstElementChild;
     }
 
-    createBodyElement(data, header){
-
-        if (data){
+    createBodyElement(data = [], header){
 
             const bodyElement = document.createElement('div');
 
@@ -175,8 +173,6 @@ export default class SortableTable {
             `;         
             
             return bodyElement.firstElementChild;
-        }
-        return null;
     }
 
     createElement(headerElement, bodyElement){

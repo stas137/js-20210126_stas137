@@ -1,9 +1,9 @@
 export default class SortableTable {
 
-    constructor(header = [], obj = {}){
+    constructor(header = [], {data = []} = {}){
 
         this.header = header;
-        this.data = obj.data || [];
+        this.data = data;
 
         this.title = 'Name';
         this.order = 'asc';
@@ -33,7 +33,9 @@ export default class SortableTable {
                     this.order = 'asc';
                 }
 
-                this.title = targetName;
+                if (targetName != '') {
+                    this.title = targetName;
+                }
 
                 if (this.title == 'Name'){
                     this.sort('title', this.order);
@@ -43,7 +45,7 @@ export default class SortableTable {
                 
                 for (let item of this.headerElement.children){
 
-                    if (item.textContent.trim('') == targetName) {
+                    if (item.textContent.trim('') == this.title) {
 
                         if (item.firstElementChild == item.lastElementChild){
                             item.setAttribute('data-order', this.order);
@@ -63,7 +65,8 @@ export default class SortableTable {
                 this.removeBody();
                 this.bodyElement = this.createBodyElement(this.data);
                 this.element.append(this.bodyElement);
-            }
+
+            } 
         });
     }
 
@@ -103,6 +106,8 @@ export default class SortableTable {
                 break;
             case 'sales':
                 this.sortRow(this.data, fieldValue, orderValue, 'number');
+                break;
+            case 'custom':
                 break;
             default:
                 break;
@@ -189,10 +194,8 @@ export default class SortableTable {
     }
 
 
-    createHeaderElement(header, title, order){
+    createHeaderElement(header = [], title, order){
 
-        if (header){
-            
             const headerElement = document.createElement('div');
 
             headerElement.innerHTML = `
@@ -203,13 +206,9 @@ export default class SortableTable {
             this.myEvent(headerElement.firstElementChild);
 
             return headerElement.firstElementChild;
-        }
-        return null;
     }
 
-    createBodyElement(data){
-
-        if (data){
+    createBodyElement(data = []){
 
             const bodyElement = document.createElement('div');
 
@@ -220,8 +219,6 @@ export default class SortableTable {
             `;         
             
             return bodyElement.firstElementChild;
-        }
-        return null;
     }
 
     createElement(headerElement, bodyElement){
