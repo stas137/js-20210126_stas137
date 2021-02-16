@@ -27,15 +27,8 @@ export default class SortableTable {
  
             if (targetName != 'Image'){
 
-                if (this.order == 'asc'){
-                    this.order = 'desc';
-                } else {
-                    this.order = 'asc';
-                }
-
-                if (targetName != '') {
-                    this.title = targetName;
-                }
+                this.order = (this.order == 'asc') ? 'desc' : 'asc';
+                this.title = (targetName != '') ? targetName : this.title;
 
                 if (this.title == 'Name'){
                     this.sort('title', this.order);
