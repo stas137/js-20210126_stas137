@@ -1,19 +1,16 @@
 class Tooltip {
 
     static #instance = null;
+    static offset = 15;
 
     constructor (){
         if (!Tooltip.#instance) {
             Tooltip.#instance = this;
-
-            this.element = null;
-            this.coordX = null;
-            this.coordY = null;
-            this.offset = 15;
-
         } else {
             return Tooltip.#instance;
         }
+        this.element = null;
+        this.pointerMove = this.pointerMove.bind(this);
     }
 
     addPointerOver(){
@@ -24,32 +21,30 @@ class Tooltip {
 
                     this.element.innerHTML = event.target.dataset.tooltip;
 
-                    this.coordX = event.clientX + this.offset;
-                    this.coordY = event.clientY + this.offset;
-                    this.element.style.left = this.coordX + 'px';
-                    this.element.style.top = this.coordY + 'px';
+                    this.addPointerMove();
                 }
             });
         }
-
     }
 
     addPointerOut(){
         document.addEventListener('pointerout', () => {
-            this.remove();
+            if (this.element){
+                document.removeEventListener('pointermove', this.pointerMove);
+                this.remove();
+            }
         });
     }
 
-    addPointerMove(){
-        document.addEventListener('pointermove', (event) => {
-            if (this.element){
+    pointerMove(event){
+            const coordX = event.clientX + Tooltip.offset;
+            const coordY = event.clientY + Tooltip.offset;
+            this.element.style.left = coordX + 'px';
+            this.element.style.top = coordY + 'px';
+    }
 
-                this.coordX = event.clientX + this.offset;
-                this.coordY = event.clientY + this.offset;
-                this.element.style.left = this.coordX + 'px';
-                this.element.style.top = this.coordY + 'px';
-            }
-        });
+    addPointerMove(){
+        document.addEventListener('pointermove', this.pointerMove);
     }
 
     get element(){
@@ -80,7 +75,6 @@ class Tooltip {
     initialize(){
         this.addPointerOver();
         this.addPointerOut();
-        this.addPointerMove();
     }
 }
 
