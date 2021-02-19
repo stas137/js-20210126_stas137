@@ -21,6 +21,12 @@ export default class SortableTable {
         this.element = this.createElement(this.headerElement, this.bodyElement);
     }
 
+    spanArrow(){
+        return `<span data-element="arrow" class="sortable-table__sort-arrow">
+                    <span class="sort-arrow"></span>
+                </span>`;
+    }
+
     myEvent(item){
 
         item.addEventListener('pointerdown', (event)=>{
@@ -47,14 +53,9 @@ export default class SortableTable {
                     for (let item of this.headerElement.children){
 
                         if (item.dataset.id == this.id) {
-
                             if (item.firstElementChild === item.lastElementChild){
-                                
-                                const spanArrow = document.createElement('div');
-                                spanArrow.innerHTML = ` <span data-element="arrow" class="sortable-table__sort-arrow">
-                                                            <span class="sort-arrow"></span>
-                                                        </span>`;
-                                item.append(spanArrow.firstElementChild);
+                                item.innerHTML = `<span>${item.textContent.trim('')}</span>
+                                                        ${this.spanArrow()}`;
                             } 
                         } else {
                             item.innerHTML = `<span>${item.textContent.trim('')}</span>`;
@@ -134,9 +135,7 @@ export default class SortableTable {
                 return `
                 <div data-id="${item.id}" class="sortable-table__cell" data-sortable="${item.sortable}" data-order="${order}">
                     <span>${item.title}</span>
-                    <span data-element="arrow" class="sortable-table__sort-arrow">
-                        <span class="sort-arrow"></span>
-                    </span>
+                    ${this.spanArrow()}
                 </div>`;
             }  else {
                 return `
