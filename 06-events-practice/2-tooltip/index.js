@@ -10,30 +10,20 @@ class Tooltip {
             return Tooltip.#instance;
         }
         this.element = null;
+
         this.pointerMove = this.pointerMove.bind(this);
+        this.pointerOver = this.pointerOver.bind(this);
+        this.pointerOut = this.pointerOut.bind(this);
     }
 
     addPointerOver(){
         if (!this.element){
-            document.addEventListener('pointerover', (event) => {
-                if (event.target.dataset.tooltip){
-                    this.render();
-
-                    this.element.innerHTML = event.target.dataset.tooltip;
-
-                    this.addPointerMove();
-                }
-            });
+            document.addEventListener('pointerover', this.pointerOver);
         }
     }
 
     addPointerOut(){
-        document.addEventListener('pointerout', () => {
-            if (this.element){
-                document.removeEventListener('pointermove', this.pointerMove);
-                this.remove();
-            }
-        });
+        document.addEventListener('pointerout', this.pointerOut);
     }
 
     pointerMove(event){
@@ -41,6 +31,21 @@ class Tooltip {
             const coordY = event.clientY + Tooltip.offset;
             this.element.style.left = coordX + 'px';
             this.element.style.top = coordY + 'px';
+    }
+
+    pointerOver(event){
+        if (event.target.dataset.tooltip){
+            this.render();
+            this.element.innerHTML = event.target.dataset.tooltip;
+            this.addPointerMove();
+        }
+    }
+
+    pointerOut(){
+        if (this.element){
+            document.removeEventListener('pointermove', this.pointerMove);
+            this.remove();
+        }
     }
 
     addPointerMove(){
@@ -56,6 +61,9 @@ class Tooltip {
     }
 
     remove(){
+        document.removeEventListener('pointerOver', this.pointerOver);
+        document.removeEventListener('pointerOut', this.pointerOut);
+
         if (this.element) {
             this.element.remove();
         }
