@@ -17,11 +17,9 @@ export default class NotificationMessage {
 
         if (NotificationMessage.prevMessage) {
             NotificationMessage.prevMessage.remove();
-            NotificationMessage.prevMessage = this.element;
-        }  else {
-            NotificationMessage.prevMessage = this.element;
-        } 
+        }
 
+        NotificationMessage.prevMessage = this.element;
     }
 
     createHTMLElement(message, type, duration){
