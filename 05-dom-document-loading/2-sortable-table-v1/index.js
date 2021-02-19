@@ -59,8 +59,10 @@ export default class SortableTable {
         
         this.removeHeader();
         this.removeBody();
+
         this.headerElement = this.createHeaderElement(this.header, fieldValue, orderValue);
-        this.bodyElement = this.createBodyElement(this.data, this.header);
+        this.bodyElement = this.createBodyElement(this.data);
+
         this.element.append(this.headerElement);
         this.element.append(this.bodyElement);
     }
@@ -81,11 +83,9 @@ export default class SortableTable {
         return [...header].map(item => {
 
             let headerItem = '';
-            let orderItem = '';
 
-            if (order) {
-                orderItem = `data-order="${order}"`;
-            }
+            const orderItem = (order) ? `data-order="${order}"` : '';
+
 
             if ((item.id == fieldValue) && (item.id!='images')){
                 headerItem = `
@@ -107,35 +107,15 @@ export default class SortableTable {
         }).join('');
     }
 
-    getBodyItems(data, header){
+    getBodyItems(data){
 
         return [...data].map(item => {
 
-            let img = '';
-            let title = '';
-            let quantity = '';
-            let price = '';
-            let sales = '';
-            
-            if (item.images){
-                img = header[0].template(item.images);
-            } 
-
-            if (item.title){
-                title = `<div class="sortable-table__cell">${item.title}</div>`;
-            }
-
-            if (item.quantity){
-                quantity = `<div class="sortable-table__cell">${item.quantity}</div>`;
-            }
-
-            if (item.price){
-                price = `<div class="sortable-table__cell">${item.price}</div>`;
-            }
-
-            if (item.sales){
-                sales = `<div class="sortable-table__cell">${item.sales}</div>`;
-            }
+            const img = (item.images) ? this.header[0].template(item.images) : '';
+            const title = (item.title) ? `<div class="sortable-table__cell">${item.title}</div>` : '';
+            const quantity = (item.quantity) ? `<div class="sortable-table__cell">${item.quantity}</div>` : '';
+            const price = (item.price) ? `<div class="sortable-table__cell">${item.price}</div>` : '';
+            const sales = (item.sales) ? `<div class="sortable-table__cell">${item.sales}</div>` : '';
 
             const bodyItem = `<a class="sortable-table__row" href="/products/${item.id}">
                                 ${img}
@@ -162,13 +142,13 @@ export default class SortableTable {
             return headerElement.firstElementChild;
     }
 
-    createBodyElement(data = [], header){
+    createBodyElement(data = []){
 
             const bodyElement = document.createElement('div');
 
             bodyElement.innerHTML = `
                 <div data-elem="body" sortable-table__body>
-                    ${this.getBodyItems(data, header)}
+                    ${this.getBodyItems(data)}
                 </div>
             `;         
             
