@@ -13,11 +13,11 @@ export default class ColumnChart {
     }
     
     render(){
-        this.element = this.createElementColumnChart(this.data, this.label, this.value, this.link);
+        this.element = this.createElementColumnChart(this.data);
     }
 
-    update({ data=[], label='', value='', link=''}) {
-        return this.element = this.createElementColumnChart(data, label, value, link);
+    update({ data = [] }) {
+        return this.element = this.createElementColumnChart(data);
     }
 
     destroy() {
@@ -28,32 +28,21 @@ export default class ColumnChart {
         this.element.remove();
     }
 
-    createElementColumnChart(data, label, value, link){
+    createElementColumnChart(data){
 
-        let classMain = '';
-        let linkMain = '';
-
-        if (data[0]){
-            classMain = 'column-chart';
-        }
-        else {
-            classMain = 'column-chart column-chart_loading';
-        }
-
-        if (link){
-            linkMain = `<a href="${link}" class="column-chart__link">View all</a>`;
-        }
-
+        const classMain = (data[0]) ? 'column-chart' : 'column-chart column-chart_loading';
+        const linkMain = (this.link) ? `<a href="${this.link}" class="column-chart__link">View all</a>` : '';
+        
         const node = document.createElement('div');
 
         node.innerHTML = `
             <div class="${classMain}" style="--chart-height: ${this.chartHeight}">
                 <div class="column-chart__title">
-                    Total ${label}
+                    Total ${this.label}
                     ${linkMain}
                 </div>
                 <div class="column-chart__container">
-                    <div data-element="header" class="column-chart__header">${value}</div>
+                    <div data-element="header" class="column-chart__header">${this.value}</div>
                     <div data-element="body" class="column-chart__chart"> 
                         ${this.getChartValue(data)}                   
                     </div>
