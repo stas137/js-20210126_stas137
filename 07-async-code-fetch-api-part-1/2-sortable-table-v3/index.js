@@ -20,7 +20,7 @@ export default class SortableTable {
         this.data = [];
 
         this.offset = OFFSET;
-        this.flag = true;
+        this.flag = false;
 
         this.url = url;
 
@@ -80,7 +80,7 @@ export default class SortableTable {
 
         this.hideLoading();
 
-        this.flag = !this.flag;
+        this.flag = false;
     }
 
     spanArrow(){
