@@ -15,13 +15,11 @@ export default class NotificationMessage {
 
         this.element = this.createHTMLElement(this.message, this.type, this.duration);
 
-        if (NotificationMessage.prevMessage == null) {
-            NotificationMessage.prevMessage = this.element;
-        }  else {
+        if (NotificationMessage.prevMessage) {
             NotificationMessage.prevMessage.remove();
-            NotificationMessage.prevMessage = this.element;
-        } 
+        }
 
+        NotificationMessage.prevMessage = this.element;
     }
 
     createHTMLElement(message, type, duration){
@@ -65,6 +63,7 @@ export default class NotificationMessage {
 
     destroy(){
         this.remove();
+        NotificationMessage.prevMessage = null;
     }
 
     get element(){
