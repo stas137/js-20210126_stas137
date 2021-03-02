@@ -302,6 +302,11 @@ export default class ProductForm {
   }
 
   remove(){
+    this.element.querySelector('.form-buttons > .button-primary-outline').removeEventListener('pointerdown', this.submitForm);
+    this.element.querySelector('.form-group.form-group__wide .sortable-list').removeEventListener('pointerdown', this.deleteImage);
+    this.element.querySelector('#uploadImage').removeEventListener('pointerdown', this.uploadImage);
+    this.element.querySelector('#uploadImageInput').removeEventListener('change', this.insertImage);
+
     if (this.element){
       this.element.remove();
     }
