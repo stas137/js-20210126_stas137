@@ -6,7 +6,7 @@ export default class SortableList {
         this.offsetX = 0;
         this.offsetY = 0;
 
-        this.offsetMarginY = 16;
+        this.offsetMarginY = 3;
 
         this.elemHeight = 0;
         this.elemWidth = 0;
@@ -47,26 +47,27 @@ export default class SortableList {
 
     onPointerMove(event){
 
-        if (this.prevPageY <= event.pageY){
+        if (this.prevPageY <= event.clientY){
             this.down = 1;
         } else {
             this.down = -1;
         }
-        this.prevPageY = event.pageY;
+        this.prevPageY = event.clientY;
 
-        this.moveAt(event.pageX, event.pageY);
+        this.moveAt(event.clientX, event.clientY);
 
         for (let i=0; i<this.elemParent.children.length-1; i++){
 
             const upperLine = this.elemHeight*i + this.offsetMarginY*(i+1);
             const lowerLine = this.elemHeight*(i+1) + this.offsetMarginY*(i+1);
+            const globalOffset = this.elemParent.getBoundingClientRect().top;
 
-            if (( event.pageY > upperLine) && ( event.pageY < (upperLine + this.elemHeight/2) ) && (this.down === 1)){
+            if (( event.clientY > (upperLine + globalOffset)) && ( event.clientY < (upperLine + this.elemHeight/2 + globalOffset) ) && (this.down === 1)){
 
                 this.elemDestination = i;
                 this.elemParent.children[this.elemDestination].after(this.node);
                 
-            }  else if (( event.pageY > (upperLine  + this.elemHeight/2) ) && ( event.pageY < lowerLine ) && (this.down === -1)){
+            }  else if (( event.clientY > (upperLine  + this.elemHeight/2 + globalOffset) ) && ( event.clientY < (lowerLine + globalOffset)) && (this.down === -1)){
 
                 this.elemDestination = i;
                 this.elemParent.children[this.elemDestination].before(this.node);
@@ -144,8 +145,8 @@ export default class SortableList {
 
             this.elemParent.children[this.elemParent.children.length-1].after(this.elem);
 
-            this.prevPageY = event.pageY;
-            this.moveAt(event.pageX, event.pageY);
+            this.prevPageY = event.clientY;
+            this.moveAt(event.clientX, event.clientY);
 
             this.elem.ondragstart = function(){
                 return false;
